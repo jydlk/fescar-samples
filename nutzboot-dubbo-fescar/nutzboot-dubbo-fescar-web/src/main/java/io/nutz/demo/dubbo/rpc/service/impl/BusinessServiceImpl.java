@@ -1,10 +1,5 @@
 package io.nutz.demo.dubbo.rpc.service.impl;
 
-import org.nutz.ioc.loader.annotation.Inject;
-import org.nutz.ioc.loader.annotation.IocBean;
-import org.nutz.log.Log;
-import org.nutz.log.Logs;
-
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fescar.core.context.RootContext;
 import com.alibaba.fescar.spring.annotation.GlobalTransactional;
@@ -12,6 +7,10 @@ import com.alibaba.fescar.spring.annotation.GlobalTransactional;
 import io.nutz.demo.dubbo.rpc.service.BusinessService;
 import io.nutz.demo.dubbo.rpc.service.OrderService;
 import io.nutz.demo.dubbo.rpc.service.StorageService;
+import org.nutz.ioc.loader.annotation.Inject;
+import org.nutz.ioc.loader.annotation.IocBean;
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
 
 @IocBean
 public class BusinessServiceImpl implements BusinessService {
@@ -31,6 +30,7 @@ public class BusinessServiceImpl implements BusinessService {
      * purchase
      */
     @GlobalTransactional(timeoutMills = 300000, name = "dubbo-demo-tx")
+    @Override
     public void purchase(String userId, String commodityCode, int orderCount, boolean dofail) {
         log.info("purchase begin ... xid: " + RootContext.getXID());
         
@@ -38,7 +38,8 @@ public class BusinessServiceImpl implements BusinessService {
         orderService.create(userId, commodityCode, orderCount);
         
         // for test
-        if (dofail)
+        if (dofail) {
             throw new RuntimeException("just make it failed");
+        }
     }
 }
